@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 using System.Xml;
 using WPF_Note.Models;
 
@@ -12,7 +15,29 @@ namespace WPF_Note.Services
 	{
 		public ICollection<object> Open(string filePath)
 		{
-			throw new NotImplementedException();
+			XmlDocument doc = new XmlDocument
+			{
+				PreserveWhitespace = true
+			};
+			doc.Load(filePath);
+			XmlNode root = doc.SelectSingleNode("Document");
+			ObservableCollection<object> result = new ObservableCollection<object>();
+			foreach (XmlNode bloc in root)
+			{
+				if (bloc.Name == "TextBloc")
+				{
+					TextBloc textBloc = new TextBloc
+					{
+						Content = bloc.Attributes["Content"].Value,
+						Style = (FontStyle)Enum.Parse(typeof(FontStyle), bloc.Attributes["FontStyle"].Value),
+						Weight = (FontWeight)Enum.Parse(typeof(FontWeight), bloc.Attributes["FontWeight"].Value),
+						Family = (FontFamily)Enum.Parse(typeof(FontFamily), bloc.Attributes["FontFamily"].Value),
+						Size = Convert.ToInt32(bloc.Attributes["FontSize"].Value)
+					};
+					result.Add(textBloc);
+				}
+			}
+			return result;
 		}
 
 		public void Save(ICollection<object> data, string filePath)

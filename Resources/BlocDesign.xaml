@@ -3,7 +3,7 @@
 					xmlns:models="clr-namespace:WPF_Note.Models">
 	<DataTemplate DataType="{x:Type models:TextBloc}">
 		<TextBox
-			Text="{Binding Content}"
+			Text="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 			FontFamily="{Binding Family}"
 			FontSize="{Binding Size}"
 			FontStyle="{Binding Style}"

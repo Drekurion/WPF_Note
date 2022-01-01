@@ -26,14 +26,14 @@ namespace WPF_Note.Models
 		/// <summary>
 		/// Font style of displayed content.
 		/// </summary>
-		private FontStyle style;
+		private FontStyle style = FontStyles.Normal;
 		public FontStyle Style
 		{
 			get => style;
 			set => OnPropertyChanged(ref style, value);
 		}
 
-		private FontWeight weight;
+		private FontWeight weight = FontWeights.Normal;
 		/// <summary>
 		/// Font weight of displayed content.
 		/// </summary>
@@ -43,7 +43,7 @@ namespace WPF_Note.Models
 			set => OnPropertyChanged(ref weight, value);
 		}
 
-		private FontFamily family;
+		private FontFamily family = new FontFamily("Consolas");
 		/// <summary>
 		/// Font family of displayed content.
 		/// </summary>
@@ -53,7 +53,7 @@ namespace WPF_Note.Models
 			set => OnPropertyChanged(ref family, value);
 		}
 
-		private int size;
+		private int size = 11;
 		/// <summary>
 		/// Font size of displayed content.
 		/// </summary>
