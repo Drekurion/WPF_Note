@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml;
@@ -13,7 +10,7 @@ namespace WPF_Note.Services
 {
 	class XmlService : IDataService
 	{
-		public ICollection<object> Open(string filePath)
+		public ObservableCollection<object> Open(string filePath)
 		{
 			XmlDocument doc = new XmlDocument
 			{
@@ -26,21 +23,22 @@ namespace WPF_Note.Services
 			{
 				if (bloc.Name == "TextBloc")
 				{
-					TextBloc textBloc = new TextBloc
-					{
-						Content = bloc.Attributes["Content"].Value,
-						Style = (FontStyle)Enum.Parse(typeof(FontStyle), bloc.Attributes["FontStyle"].Value),
-						Weight = (FontWeight)Enum.Parse(typeof(FontWeight), bloc.Attributes["FontWeight"].Value),
-						Family = (FontFamily)Enum.Parse(typeof(FontFamily), bloc.Attributes["FontFamily"].Value),
-						Size = Convert.ToInt32(bloc.Attributes["FontSize"].Value)
-					};
+					TextBloc textBloc = new TextBloc();
+					textBloc.Content = bloc["Content"].InnerText.ToString();
+					FontStyleConverter fontStyleConverter = new FontStyleConverter();
+					FontWeightConverter fontWeightConverter = new FontWeightConverter();
+					FontFamilyConverter fontFamilyConverter = new FontFamilyConverter();
+					textBloc.Style = (FontStyle)fontStyleConverter.ConvertFromString(bloc["FontStyle"].InnerText);
+					textBloc.Weight = (FontWeight)fontWeightConverter.ConvertFromString(bloc["FontWeight"].InnerText);
+					textBloc.Family = (FontFamily)fontFamilyConverter.ConvertFromString(bloc["FontFamily"].InnerText);
+					textBloc.Size = Convert.ToInt32(bloc["FontSize"].InnerText);
 					result.Add(textBloc);
 				}
 			}
 			return result;
 		}
 
-		public void Save(ICollection<object> data, string filePath)
+		public void Save(ObservableCollection<object> data, string filePath)
 		{
 			XmlDocument doc = new XmlDocument();
 			XmlNode root = doc.CreateNode(XmlNodeType.Element, "Document", null);

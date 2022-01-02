@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WPF_Note.Models;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace WPF_Note.Services
 {
 	public interface IDataService
 	{
-		ICollection<object> Open(string filePath);
-		void Save(ICollection<object> data, string filePath);
+		ObservableCollection<object> Open(string filePath);
+		void Save(ObservableCollection<object> data, string filePath);
 	}
 }

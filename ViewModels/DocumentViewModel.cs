@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.Win32;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using WPF_Note.Models;
@@ -33,6 +34,8 @@ namespace WPF_Note.ViewModels
 
 		public DocumentViewModel()
 		{
+			FileData = new FileData();
+			Blocs = new ObservableCollection<object>();
 			NewDocument();
 			AddTextBlocCommand = new RelayCommand(AddText);
 			RemoveBlocCommand = new RelayCommand(RemoveBloc, BlocIsSelected);
@@ -54,14 +57,7 @@ namespace WPF_Note.ViewModels
 		private void RemoveBloc()
 		{
 			Blocs.Remove(SelectedBloc);
-			if(Blocs.Count > 0)
-			{
-				SelectedBloc = Blocs.Last();
-			}
-			else
-			{
-				SelectedBloc = null;
-			}
+			SelectedBloc = Blocs.Count > 0 ? Blocs.Last() : null;
 		}
 
 		/// <summary>
@@ -77,8 +73,27 @@ namespace WPF_Note.ViewModels
 		/// </summary>
 		public void NewDocument()
 		{
-			FileData = new FileData();
-			Blocs = new ObservableCollection<object>();
+			FileData.FileName = string.Empty;
+			FileData.FilePath = string.Empty;
+			SelectedBloc = null;
+			Blocs.Clear();
+		}
+
+		/// <summary>
+		/// Creates a document from opened data.
+		/// </summary>
+		/// <param name="blocs">Collection of data blocks</param>
+		/// <param name="fileData">Dialog containing a path to file.</param>
+		public void OpenDocument(ObservableCollection<object> blocs, OpenFileDialog fileData)
+		{
+			SelectedBloc = null;
+			Blocs.Clear();
+			foreach(object b in blocs)
+			{
+				Blocs.Add(b);
+			}
+			FileData.FilePath = fileData.FileName;
+			FileData.FileName = fileData.SafeFileName;
 		}
 	}
 }

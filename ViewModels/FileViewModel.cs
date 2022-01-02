@@ -51,8 +51,8 @@ namespace WPF_Note.ViewModels
 			var openFileDialog = new OpenFileDialog();
 			if (openFileDialog.ShowDialog() == true)
 			{
-				DockFile(openFileDialog);
-				dataService.Open(openFileDialog.FileName);
+				var blocs = dataService.Open(openFileDialog.FileName);
+				Document.OpenDocument(blocs, openFileDialog);
 			}
 		}
 
@@ -76,7 +76,8 @@ namespace WPF_Note.ViewModels
 			};
 			if (saveFileDialog.ShowDialog() == true)
 			{
-				DockFile(saveFileDialog);
+				Document.FileData.FilePath = saveFileDialog.FileName;
+				Document.FileData.FileName = saveFileDialog.SafeFileName;
 				dataService.Save(Document.Blocs, saveFileDialog.FileName);
 			}
 		}
@@ -84,16 +85,6 @@ namespace WPF_Note.ViewModels
 		private void Exit()
 		{
 			Application.Current.Shutdown();
-		}
-
-		/// <summary>
-		/// Assigns file name to document.
-		/// </summary>
-		/// <param name="dialog">File dialog returning a filepath.</param>
-		private void DockFile(FileDialog dialog)
-		{
-			Document.FileData.FilePath = dialog.FileName;
-			Document.FileData.FileName = dialog.SafeFileName;
 		}
 	}
 }
