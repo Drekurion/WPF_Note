@@ -16,12 +16,15 @@ namespace WPF_Note.ViewModels
 
 		public FormatViewModel Format { get; set; }
 
+		public HelpViewModel Help { get; set; }
+
 		public MainViewModel()
 		{
 			Document = new DocumentViewModel();
 			File = new FileViewModel(Document);
 			Edit = new EditViewModel();
 			Format = new FormatViewModel(Document);
+			Help = new HelpViewModel();
 		}
 	}
 }

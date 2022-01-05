@@ -40,7 +40,7 @@
 					<MenuItem Header="Font..." Command="{Binding Format.FormatCommand}"/>
 				</MenuItem>
 				<MenuItem Header="Help">
-					<MenuItem Header="About"/>
+					<MenuItem Header="About" Command="{Binding Help.AboutCommand}"/>
 				</MenuItem>
 			</Menu.Items>
 		</Menu>
