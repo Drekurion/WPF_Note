@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using WPF_Note.Models;
 using WPF_Note.Utility;
 
@@ -30,6 +31,7 @@ namespace WPF_Note.ViewModels
 		public ObservableCollection<object> Blocs { get; private set; }
 
 		public ICommand AddTextBlocCommand { get; private set; }
+		public ICommand AddImageBlocCommand { get; private set; }
 		public ICommand RemoveBlocCommand { get; private set; }
 
 		public DocumentViewModel()
@@ -38,6 +40,7 @@ namespace WPF_Note.ViewModels
 			Blocs = new ObservableCollection<object>();
 			NewDocument();
 			AddTextBlocCommand = new RelayCommand(AddText);
+			AddImageBlocCommand = new RelayCommand(AddImage);
 			RemoveBlocCommand = new RelayCommand(RemoveBloc, BlocIsSelected);
 		}
 
@@ -49,6 +52,20 @@ namespace WPF_Note.ViewModels
 			var bloc = new TextBloc();
 			Blocs.Add(bloc);
 			SelectedBloc = bloc;
+		}
+		/// <summary>
+		/// Function adding a new Image bloc to the document from file.
+		/// </summary>
+		private void AddImage()
+		{
+			ImageBloc bloc;
+			OpenFileDialog dialog = new OpenFileDialog();
+			if(dialog.ShowDialog() == true)
+			{
+				bloc = new ImageBloc(new BitmapImage(new System.Uri(dialog.FileName)));
+				Blocs.Add(bloc);
+				SelectedBloc = bloc;
+			}
 		}
 
 		/// <summary>

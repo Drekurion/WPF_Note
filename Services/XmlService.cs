@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml;
 using WPF_Note.Models;
 
@@ -24,7 +26,7 @@ namespace WPF_Note.Services
 				if (bloc.Name == "TextBloc")
 				{
 					TextBloc textBloc = new TextBloc();
-					textBloc.Content = bloc["Content"].InnerText.ToString();
+					textBloc.Content = bloc["Content"].InnerText;
 					FontStyleConverter fontStyleConverter = new FontStyleConverter();
 					FontWeightConverter fontWeightConverter = new FontWeightConverter();
 					FontFamilyConverter fontFamilyConverter = new FontFamilyConverter();
@@ -33,6 +35,21 @@ namespace WPF_Note.Services
 					textBloc.Family = (FontFamily)fontFamilyConverter.ConvertFromString(bloc["FontFamily"].InnerText);
 					textBloc.Size = Convert.ToInt32(bloc["FontSize"].InnerText);
 					result.Add(textBloc);
+				}
+				else if (bloc.Name == "ImageBloc")
+				{
+					byte[] byteBuffer = Convert.FromBase64String(bloc["Content"].InnerText);
+					BitmapImage bitmapImage = new BitmapImage();
+					using (MemoryStream memoryStream = new MemoryStream(byteBuffer))
+					{
+						memoryStream.Position = 0;
+						bitmapImage.BeginInit();
+						bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+						bitmapImage.StreamSource = memoryStream;
+						bitmapImage.EndInit();
+					}
+					ImageBloc imageBloc = new ImageBloc(bitmapImage);
+					result.Add(imageBloc);
 				}
 			}
 			return result;
@@ -70,6 +87,22 @@ namespace WPF_Note.Services
 					XmlNode size = doc.CreateNode(XmlNodeType.Element, "FontSize", null);
 					size.InnerText = Convert.ToString(part.Size);
 					bloc.AppendChild(size);
+				}
+				else if(b is ImageBloc)
+				{
+					var part = b as ImageBloc;
+					XmlNode bloc = doc.CreateNode(XmlNodeType.Element, "ImageBloc", null);
+					root.AppendChild(bloc);
+
+					XmlNode content = doc.CreateNode(XmlNodeType.Element, "Content", null);
+					var encoder = new JpegBitmapEncoder();
+					encoder.Frames.Add(BitmapFrame.Create(part.Content));
+					using (MemoryStream memoryStream = new MemoryStream())
+					{
+						encoder.Save(memoryStream);
+						content.InnerText = Convert.ToBase64String(memoryStream.ToArray());
+					}
+					bloc.AppendChild(content);
 				}
 			}
 			doc.Save(filePath);
