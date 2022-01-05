@@ -63,7 +63,7 @@ namespace WPF_Note.ViewModels
 		/// <summary>
 		/// Returns true if there is any block selected. Returns false if there is no block selected (no blocks).
 		/// </summary>
-		private bool BlocIsSelected()
+		public bool BlocIsSelected()
 		{
 			return SelectedBloc != null;
 		}

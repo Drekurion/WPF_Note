@@ -14,11 +14,14 @@ namespace WPF_Note.ViewModels
 
 		public EditViewModel Edit { get; set; }
 
+		public FormatViewModel Format { get; set; }
+
 		public MainViewModel()
 		{
 			Document = new DocumentViewModel();
 			File = new FileViewModel(Document);
 			Edit = new EditViewModel();
+			Format = new FormatViewModel(Document);
 		}
 	}
 }

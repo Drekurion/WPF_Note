@@ -36,7 +36,7 @@
 					<MenuItem Header="Delete Bloc" Command="{Binding Document.RemoveBlocCommand}"/>
 				</MenuItem>
 				<MenuItem Header="Format">
-					<MenuItem Header="Font..."/>
+					<MenuItem Header="Font..." Command="{Binding Format.FormatCommand}"/>
 				</MenuItem>
 				<MenuItem Header="Help">
 					<MenuItem Header="About"/>
@@ -45,7 +45,7 @@
 		</Menu>
 		<DockPanel>
 			<TextBlock DockPanel.Dock="Bottom" Text="{Binding Document.FileData.FilePath, FallbackValue=''}"/>
-			<ListBox ItemsSource="{Binding Document.Blocs}" SelectedItem="{Binding Document.SelectedBloc}">
+			<ListBox ItemsSource="{Binding Document.Blocs}" SelectedItem="{Binding Document.SelectedBloc}" HorizontalAlignment="Stretch">
 				<ListBox.Resources>
 					<ResourceDictionary Source="/Resources/BlocDesign.xaml"/>
 				</ListBox.Resources>

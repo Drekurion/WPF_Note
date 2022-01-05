@@ -8,6 +8,8 @@
 			FontSize="{Binding Size}"
 			FontStyle="{Binding Style}"
 			FontWeight="{Binding Weight}"
+			MinWidth="200"
+			MinLines="4"
 			AcceptsReturn="True"
 			AcceptsTab="True"/>
 	</DataTemplate>
