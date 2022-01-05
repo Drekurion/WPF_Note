@@ -10,6 +10,9 @@ using WPF_Note.Models;
 
 namespace WPF_Note.Services
 {
+	/// <summary>
+	/// Service used to open and save a document from and into an xml file.
+	/// </summary>
 	class XmlService : IDataService
 	{
 		public ObservableCollection<object> Open(string filePath)
@@ -23,33 +26,39 @@ namespace WPF_Note.Services
 			ObservableCollection<object> result = new ObservableCollection<object>();
 			foreach (XmlNode bloc in root)
 			{
-				if (bloc.Name == "TextBloc")
+				switch (bloc.Name)
 				{
-					TextBloc textBloc = new TextBloc();
-					textBloc.Content = bloc["Content"].InnerText;
-					FontStyleConverter fontStyleConverter = new FontStyleConverter();
-					FontWeightConverter fontWeightConverter = new FontWeightConverter();
-					FontFamilyConverter fontFamilyConverter = new FontFamilyConverter();
-					textBloc.Style = (FontStyle)fontStyleConverter.ConvertFromString(bloc["FontStyle"].InnerText);
-					textBloc.Weight = (FontWeight)fontWeightConverter.ConvertFromString(bloc["FontWeight"].InnerText);
-					textBloc.Family = (FontFamily)fontFamilyConverter.ConvertFromString(bloc["FontFamily"].InnerText);
-					textBloc.Size = Convert.ToInt32(bloc["FontSize"].InnerText);
-					result.Add(textBloc);
-				}
-				else if (bloc.Name == "ImageBloc")
-				{
-					byte[] byteBuffer = Convert.FromBase64String(bloc["Content"].InnerText);
-					BitmapImage bitmapImage = new BitmapImage();
-					using (MemoryStream memoryStream = new MemoryStream(byteBuffer))
-					{
-						memoryStream.Position = 0;
-						bitmapImage.BeginInit();
-						bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-						bitmapImage.StreamSource = memoryStream;
-						bitmapImage.EndInit();
-					}
-					ImageBloc imageBloc = new ImageBloc(bitmapImage);
-					result.Add(imageBloc);
+					case "TextBloc":
+						{
+							TextBloc textBloc = new TextBloc();
+							textBloc.Content = bloc["Content"].InnerText;
+							FontStyleConverter fontStyleConverter = new FontStyleConverter();
+							FontWeightConverter fontWeightConverter = new FontWeightConverter();
+							FontFamilyConverter fontFamilyConverter = new FontFamilyConverter();
+							textBloc.Style = (FontStyle)fontStyleConverter.ConvertFromString(bloc["FontStyle"].InnerText);
+							textBloc.Weight = (FontWeight)fontWeightConverter.ConvertFromString(bloc["FontWeight"].InnerText);
+							textBloc.Family = (FontFamily)fontFamilyConverter.ConvertFromString(bloc["FontFamily"].InnerText);
+							textBloc.Size = Convert.ToInt32(bloc["FontSize"].InnerText);
+							result.Add(textBloc);
+							break;
+						}
+
+					case "ImageBloc":
+						{
+							byte[] byteBuffer = Convert.FromBase64String(bloc["Content"].InnerText);
+							BitmapImage bitmapImage = new BitmapImage();
+							using (MemoryStream memoryStream = new MemoryStream(byteBuffer))
+							{
+								memoryStream.Position = 0;
+								bitmapImage.BeginInit();
+								bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+								bitmapImage.StreamSource = memoryStream;
+								bitmapImage.EndInit();
+							}
+							ImageBloc imageBloc = new ImageBloc(bitmapImage);
+							result.Add(imageBloc);
+							break;
+						}
 				}
 			}
 			return result;
